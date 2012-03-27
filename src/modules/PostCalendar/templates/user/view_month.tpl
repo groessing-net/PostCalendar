@@ -1,4 +1,7 @@
-{checkpermission component="::" instance=".*" level="ACCESS_ADD" assign="ACCESS_ADD"}
+{checkpermission component="PostCalendar::" instance="::" level="ACCESS_ADD" assign="ACCESS_ADD"}
+{ajaxheader module="PostCalendar" ui=true}
+{pc_pagejs_init}
+{zpopup}
 {formutil_getpassedvalue name="theme" source="get" assign="theme" default=false}
 {assign var="PRINT_VIEW" value=0}
 {if $theme eq "Printer"}
@@ -73,7 +76,7 @@
 
                     {assign var="desc" value=$event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter'|safehtml|truncate:255:"..."}
                     {if $event.privateicon}{img src='locked.png' modname='core' set='icons/extrasmall' __title="private event" __alt="private event"}{/if}
-                    {pc_url full=true action=detail eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" title=$event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter'|safehtml display="$timestamp $title"|safehtml}
+                    {pc_url full=true action=detail eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" title=$event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter'|safehtml display="$timestamp $title"|safehtml popup=1}
                     {if $event.commentcount gt 0}
                         {gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"}
                         <a href="{modurl modname='PostCalendar' type='user' func='display' viewtype='details' eid=$event.eid}#comments" title='{$title}'>
