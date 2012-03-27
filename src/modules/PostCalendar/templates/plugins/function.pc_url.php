@@ -19,7 +19,12 @@ function smarty_function_pc_url($args, &$smarty)
     $assign = array_key_exists('assign', $args) && !empty($args['assign']) ? $args['assign'] : null;
     $navlink = array_key_exists('navlink', $args) && !empty($args['navlink']) ? true : false;
     $func = array_key_exists('func', $args) && !empty($args['func']) ? $args['func'] : 'create';
-    $viewtype = array_key_exists('viewtype', $args) && !empty($args['viewtype']) ? $args['viewtype'] : strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
+    
+    /* Setting Popup as arg, to manually overwrite Defaultsettings in Templates by groessing.net*/
+    $popup=true;
+    $popup = array_key_exists('popup', $args) && empty($args['popup']) ? false : true;
+	
+	$viewtype = array_key_exists('viewtype', $args) && !empty($args['viewtype']) ? $args['viewtype'] : strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
     unset($args['action']);
     unset($args['print']);
     unset($args['date']);
@@ -66,7 +71,8 @@ function smarty_function_pc_url($args, &$smarty)
         case 'today':
             $link = ModUtil::url('PostCalendar', 'user', 'display', array(
                         'viewtype' => $viewtype,
-                        'Date' => DateUtil::getDatetime('', '%Y%m%d000000'),
+//                        'Date' => DateUtil::getDatetime('', '%Y%m%d000000'),
+                        'Date' => date('Ymd') . '000000',
                         'pc_username' => $pc_username));
             break;
         case 'day':
@@ -96,8 +102,8 @@ function smarty_function_pc_url($args, &$smarty)
                     'Date' => $date,
                     'viewtype' => 'details',
                     'eid' => $eid);
-                if (_SETTING_OPEN_NEW_WINDOW) {
-                    $linkparams['popup'] = true;
+				if (_SETTING_OPEN_NEW_WINDOW) {
+                    $linkparams['popup'] = $popup;
                 }
                 $link = ModUtil::url('PostCalendar', 'user', 'display', $linkparams);
             } else {
@@ -163,7 +169,7 @@ function smarty_function_pc_url($args, &$smarty)
             if (_SETTING_USE_POPUPS) {
                 $classes[] = 'tooltips';
             }
-            if (_SETTING_OPEN_NEW_WINDOW) {
+            if ((_SETTING_OPEN_NEW_WINDOW) && ($action == "detail")) {
                 $classes[] = 'event_details';
             }
             $class = implode(' ', $classes);
