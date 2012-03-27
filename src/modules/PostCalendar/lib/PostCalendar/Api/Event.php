@@ -222,6 +222,15 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             // determine the stop date for this event
             $stop = ($event['endDate'] == '0000-00-00') ? $end_date : $event['endDate'];
 
+    		// If the Event has an EndDate, the Repeat-Freqenzy should be set, so the event
+            // is shown every day from start to endDate in the Calendar
+            if($event['endtype']<>0 and isset($event['endDate']) and $event['endDate']>$event['startDate']){
+				$event['recurrtype']=1;
+				$event['repeat']['event_repeat_freq']=1;
+				$event['repeat']['event_repeat_freq_type']=0;
+			} 
+
+
             // this switch block fills the $days array with events. It computes recurring events and adds the recurrances to the $days array also
             switch ($event['recurrtype']) {
                 // Events that do not repeat only have a startday (eventDate)
